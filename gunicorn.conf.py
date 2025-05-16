@@ -1,7 +1,7 @@
 import multiprocessing
 
 bind = "0.0.0.0:8000"         # Адрес и порт
-workers = multiprocessing.cpu_count() * 2 + 1  # Кол-во воркеров
+workers = 3  # Кол-во воркеров
 worker_class = "sync"         # Класс воркера (sync, gevent, etc)
 timeout = 30                  # Таймаут соединения
 graceful_timeout = 30         # Таймаут на завершение
