@@ -12,6 +12,7 @@ DEBUG = config("DJANGO_DEBUG")
 ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS").split()
 
 AUTH_USER_MODEL = "users.User"
+CORS_ALLOW_ALL_ORIGINS = True
 
 DJANGO_APPS = [
     'django.contrib.admin',
@@ -32,6 +33,7 @@ THRID_APPS = [
     'drf_yasg',
     'rest_framework',
     'rest_framework_simplejwt',
+    'corsheaders',
 ]
 
 INSTALLED_APPS = [
@@ -49,6 +51,7 @@ REST_FRAMEWORK = {
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
