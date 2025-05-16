@@ -10,6 +10,7 @@ DEBUG = config("DJANGO_DEBUG")
 
 ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS").split()
 
+AUTH_USER_MODEL = "users.User"
 
 DJANGO_APPS = [
     'django.contrib.admin',
@@ -21,7 +22,7 @@ DJANGO_APPS = [
 ]
 
 LOCAL_APPS = [
-
+    "apps.users",
 ]
 
 THRID_APPS = [
