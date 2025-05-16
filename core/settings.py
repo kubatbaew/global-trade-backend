@@ -25,7 +25,7 @@ LOCAL_APPS = [
 ]
 
 THRID_APPS = [
-
+    'drf_yasg',
 ]
 
 INSTALLED_APPS = [
