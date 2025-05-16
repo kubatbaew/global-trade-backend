@@ -13,6 +13,7 @@ api_v1_urlpatterns = [
 urlpatterns = [
     path('admin/', main_admin.site.urls),
     path('docs/', docs_swagger.with_ui('swagger', cache_timeout=0)),
-    path("api/", include(api_v1_urlpatterns))
+    path("api/", include(api_v1_urlpatterns)),
+    path("", include("rest_framework.urls")),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

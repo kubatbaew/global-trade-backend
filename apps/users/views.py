@@ -14,6 +14,7 @@ class GetMeAPIView(APIView):
         responses={
             200: UserGetMeSerializer,
         },
+        security=[{'Bearer': []}]
     )
     def get(self, request):
         serializer = UserGetMeSerializer(request.user)
