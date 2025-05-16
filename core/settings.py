@@ -23,10 +23,12 @@ DJANGO_APPS = [
 
 LOCAL_APPS = [
     "apps.users",
+    "apps.clients",
 ]
 
 THRID_APPS = [
     'drf_yasg',
+    'rest_framework',
 ]
 
 INSTALLED_APPS = [
