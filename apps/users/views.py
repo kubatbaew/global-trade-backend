@@ -1,3 +1,20 @@
-from django.shortcuts import render
+from rest_framework.views import APIView
+from rest_framework import response
+from rest_framework.permissions import IsAuthenticated
 
-# Create your views here.
+from drf_yasg.utils import swagger_auto_schema
+
+from apps.users.serializers import UserGetMeSerializer
+
+
+class GetMeAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(
+        responses={
+            200: UserGetMeSerializer,
+        },
+    )
+    def get(self, request):
+        serializer = UserGetMeSerializer(request.user)
+        return response.Response(serializer.data)
