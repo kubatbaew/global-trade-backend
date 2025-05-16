@@ -2,6 +2,8 @@ from django.db import models
 
 from django.contrib.auth.models import AbstractUser
 
+from apps.clients.models import Client
+
 
 class User(AbstractUser):
     first_name = None
@@ -10,7 +12,10 @@ class User(AbstractUser):
     telegram_id = models.CharField(
         max_length=120,
     )
-    client_id = ...
+    client_id = models.OneToOneField(
+        Client, on_delete=models.SET_NULL,
+        blank=True, null=True
+    )
     name = models.CharField(
         max_length=120,
         blank=True, null=True
