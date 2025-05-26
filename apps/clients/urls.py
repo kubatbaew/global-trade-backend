@@ -1,8 +1,10 @@
-from django.urls import path
+from rest_framework.routers import DefaultRouter
 
-from apps.clients.views import ClientListAPIView
+from apps.clients.views import ClientListAPIViewSet
 
 
-urlpatterns = [
-    path("clients/", ClientListAPIView.as_view(), name="client_list"),
-]
+router = DefaultRouter()
+
+router.register("clients", ClientListAPIViewSet)
+
+urlpatterns = router.urls

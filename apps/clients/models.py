@@ -5,16 +5,13 @@ class Client(models.Model):
     client_code = models.CharField(
         max_length=8,
     )
-    name = models.CharField(
-        max_length=120,
-    )
-    surname = models.CharField(
+    full_name = models.CharField(
         max_length=120,
     )
     phone_number = models.CharField(
         max_length=12,
     )
-    phone_number_whatsapp = models.CharField(
+    whatsapp_number = models.CharField(
         max_length=12,
     )
     city = models.CharField(
@@ -28,8 +25,11 @@ class Client(models.Model):
         max_length=120,
         blank=True, null=True,
     )
-    guanjou_address = models.CharField(
+    china_warehouse_address = models.CharField(
         max_length=1000,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True
     )
 
     def __str__(self):

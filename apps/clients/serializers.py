@@ -9,12 +9,12 @@ class ClientListSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "client_code",
-            "name",
-            "surname",
+            "full_name",
             "phone_number",
-            "phone_number_whatsapp",
+            "whatsapp_number",
             "city",
             "address",
             "ref_link",
-            "guanjou_address",
+            "china_warehouse_address",
+            "created_at",
         ]
