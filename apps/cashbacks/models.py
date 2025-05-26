@@ -39,7 +39,10 @@ class CashbackTransaction(models.Model):
         ('USED', 'Used'),
     ]
 
-    client_id = models.PositiveBigIntegerField()
+    client = models.ForeignKey(
+        Client, on_delete=models.CASCADE,
+        related_name="cashback_transactions",
+    )
     transaction_type = models.CharField(
         max_length=6,
         choices=TRANSACTION_TYPES
