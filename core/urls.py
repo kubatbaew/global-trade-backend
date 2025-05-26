@@ -7,7 +7,7 @@ from core.admin import main_admin
 
 api_v1_urlpatterns = [
     path("", include("apps.clients.urls")),
-    path("", include("apps.users.urls")),
+    path("users/", include("apps.users.urls")),
     path("cashback/", include("apps.cashbacks.urls")),
 ]
 

@@ -13,8 +13,17 @@ class UserGetMeSerializer(serializers.ModelSerializer):
             "id",
             "telegram_id",
             "client_code",
-            "full_name",
+            "first_name",
+            "last_name",
             "phone_number",
             "is_admin",
         ]
-
+        read_only_fields = [
+            "is_admin",
+            "id",
+        ]
+    
+    def validate_client_code(self, value):
+        if User.objects.filter(client_code=value).exists():
+            raise serializers.ValidationError("User with client_code already exists.")
+        return value

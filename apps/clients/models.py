@@ -5,9 +5,8 @@ class Client(models.Model):
     client_code = models.CharField(
         max_length=8,
     )
-    full_name = models.CharField(
-        max_length=120,
-    )
+    first_name = models.CharField(max_length=60)
+    last_name = models.CharField(max_length=60)
     phone_number = models.CharField(
         max_length=12,
     )

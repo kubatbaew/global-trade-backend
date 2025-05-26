@@ -6,9 +6,6 @@ from apps.clients.models import Client
 
 
 class User(AbstractUser):
-    first_name = None
-    last_name = None
-
     telegram_id = models.CharField(
         max_length=120,
     )
@@ -19,9 +16,8 @@ class User(AbstractUser):
     client_code = models.CharField(
         max_length=8,
     )
-    full_name = models.CharField(
-        max_length=120,
-    )
+    first_name = models.CharField(max_length=60)
+    last_name = models.CharField(max_length=60)
     phone_number = models.CharField(
         max_length=12,
         blank=True, null=True

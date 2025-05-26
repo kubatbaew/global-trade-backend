@@ -26,7 +26,8 @@ class Command(BaseCommand):
         for client in clients:
             client_data = {
                 'client_code': client.get('client_code'),
-                'full_name': f"{client.get('surname')} {client.get('name')}",
+                'first_name': client.get('name'),
+                'last_name': client.get('surname'),
                 'phone_number': client.get('phone_number'),
                 'whatsapp_number': client.get('phone_number_whatsapp'),
                 'city': client.get('city'),
