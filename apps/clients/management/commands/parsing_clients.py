@@ -2,6 +2,7 @@ import json
 from django.core.management.base import BaseCommand
 
 from apps.clients.models import Client
+from apps.cashbacks.models import CashbackBalance
 
 class Command(BaseCommand):
     help = 'Импорт клиентов из datac.json в базу данных'
@@ -25,12 +26,11 @@ class Command(BaseCommand):
         for client in clients:
             client_data = {
                 'client_code': client.get('client_code'),
-                'name': client.get('name'),
-                'surname': client.get('surname'),
+                'full_name': f"{client.get('surname')} {client.get('name')}",
                 'phone_number': client.get('phone_number'),
-                'phone_number_whatsapp': client.get('phone_number_whatsapp'),
+                'whatsapp_number': client.get('phone_number_whatsapp'),
                 'city': client.get('city'),
-                'guanjou_address': client.get('guanjou_address')
+                'china_warehouse_address': client.get('guanjou_address')
             }
 
             # Если есть адрес — добавляем
@@ -38,7 +38,10 @@ class Command(BaseCommand):
                 client_data['address'] = client['address']
 
             # Создаём объект
-            Client.objects.create(**client_data)
+            client_obj = Client.objects.create(**client_data)
+            CashbackBalance.objects.create(
+                client=client_obj
+            )
             created_count += 1
 
         self.stdout.write(self.style.SUCCESS(f"Создано {created_count} клиентов в базе данных"))

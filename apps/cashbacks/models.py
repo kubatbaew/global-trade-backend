@@ -2,19 +2,71 @@ from django.db import models
 
 from apps.clients.models import Client
 
-class CashBack(models.Model):
-    client_id = models.OneToOneField(
+
+class CashbackBalance(models.Model):
+    client = models.OneToOneField(
         Client, on_delete=models.CASCADE,
-        related_name="cashback"
+        related_name="cashback_balance",
     )
-    balance = models.DecimalField(
-        max_digits=7, decimal_places=2,
-        default=0
+    total_earned = models.DecimalField(
+        max_digits=10, decimal_places=2,
+        default=0,
+        verbose_name="всего сколько начислено кешбэков"
+    )
+    total_used = models.DecimalField(
+        max_digits=10, decimal_places=2,
+        default=0, verbose_name="всего сколько потрачено кешбэков",
+    )
+    current_balance = models.DecimalField(
+        max_digits=10, decimal_places=2,
+        default=0, verbose_name="актуальный баланс кешбэка",
+    )
+    total_weight = models.DecimalField(
+        max_digits=10, decimal_places=2,
+        default=0, verbose_name="всего сколько веса было",
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True
     )
 
-    def __str__(self):
-        return self.client_id.client_code
-    
-    class Meta:
-        verbose_name = "CashBack"
-        verbose_name_plural = "CashBacks"
+
+class CashbackTransaction(models.Model):
+    TRANSACTION_TYPES = [
+        ('EARNED', 'Earned'),
+        ('USED', 'Used'),
+    ]
+
+    client_id = models.PositiveBigIntegerField()
+    transaction_type = models.CharField(
+        max_length=6,
+        choices=TRANSACTION_TYPES
+    )
+    cashback_amount = models.DecimalField(
+        max_digits=10, decimal_places=2,
+        verbose_name="сумма начислямого кэшбека",
+    )
+    amount = models.DecimalField(
+        max_digits=10, decimal_places=2,
+        null=True, blank=True,
+        verbose_name="сумма оплаты пользователя"
+    )
+    weight = models.DecimalField(
+        max_digits=10, decimal_places=2,
+        null=True, blank=True,
+        verbose_name="вес",
+    )
+    balance_before = models.DecimalField(
+        max_digits=10, decimal_places=2
+    )
+    balance_after = models.DecimalField(
+        max_digits=10, decimal_places=2
+    )
+    description = models.TextField(
+        blank=True, null=True
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
