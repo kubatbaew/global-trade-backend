@@ -12,17 +12,15 @@ class User(AbstractUser):
     telegram_id = models.CharField(
         max_length=120,
     )
-    client_id = models.OneToOneField(
-        Client, on_delete=models.SET_NULL,
-        blank=True, null=True
+    # client_id = models.OneToOneField(
+    #     Client, on_delete=models.SET_NULL,
+    #     blank=True, null=True
+    # )
+    client_code = models.CharField(
+        max_length=8,
     )
-    name = models.CharField(
+    full_name = models.CharField(
         max_length=120,
-        blank=True, null=True
-    )
-    surname = models.CharField(
-        max_length=120,
-        blank=True, null=True
     )
     phone_number = models.CharField(
         max_length=12,
