@@ -6,3 +6,8 @@ from apps.cashbacks.models import CashbackBalance, CashbackTransaction
 @admin.register(CashbackBalance)
 class CashbackBalanceAdmin(admin.ModelAdmin):
     list_display = ['client']
+
+
+@admin.register(CashbackTransaction)
+class CashbackBalanceAdmin(admin.ModelAdmin):
+    list_display = ['client']
