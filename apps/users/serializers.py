@@ -68,3 +68,11 @@ class UserCreateSerializer(serializers.ModelSerializer):
         user = User.objects.create(client=client, **validated_data)
         CashbackBalance.objects.create(user=user)
         return user
+
+
+class UserTransferSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'telegram_id',
+        ]

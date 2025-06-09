@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from apps.users.serializers import UserGetMeSerializer, UserCreateSerializer
+from apps.users.serializers import UserGetMeSerializer, UserCreateSerializer, UserTransferSerializer
 
 
 User = get_user_model()
@@ -80,3 +80,7 @@ class UserDestroyAPIView(generics.DestroyAPIView):
         return response.Response({"detail": "User deleted"}, status=200)
     
 
+class UserTransferAPIView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserTransferSerializer
+    lookup_field = "pk"
