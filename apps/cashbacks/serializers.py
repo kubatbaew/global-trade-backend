@@ -1,16 +1,14 @@
 from rest_framework import serializers
 
 from apps.cashbacks.models import CashbackBalance, CashbackTransaction
-from apps.clients.serializers import ClientListSerializer
 
 
 class CashbackBalanceSerializer(serializers.ModelSerializer):
-    client = ClientListSerializer(read_only=True)
     class Meta:
         model = CashbackBalance
         fields = [
             "id",
-            "client",
+            "user",
             "total_earned",
             "total_used",
             "current_balance",
@@ -25,7 +23,7 @@ class CashbackTransactionSerializer(serializers.ModelSerializer):
         model = CashbackTransaction
         fields = [
             "id",
-            "client_id",
+            "user",
             "transaction_type",
             "cashback_amount",
             "amount",

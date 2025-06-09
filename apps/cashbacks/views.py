@@ -6,9 +6,13 @@ from decimal import Decimal
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
+from django.contrib.auth import get_user_model
+
 from apps.cashbacks.models import CashbackBalance, CashbackTransaction
 from apps.cashbacks.serializers import CashbackBalanceSerializer, CashbackTransactionSerializer
 
+
+User = get_user_model()
 
 class GetCashBackBalance(
     mixins.RetrieveModelMixin,
@@ -27,9 +31,9 @@ class CashbackTransactionListAPIViewSet(
     @swagger_auto_schema(
         manual_parameters=[
             openapi.Parameter(
-                'client_id',
+                'user_id',
                 openapi.IN_QUERY,
-                description="ID client for filter transaction",
+                description="ID user for filter transaction",
                 type=openapi.TYPE_INTEGER,
                 required=True
             )
@@ -39,8 +43,8 @@ class CashbackTransactionListAPIViewSet(
         return super().list(request, *args, **kwargs)
 
     def get_queryset(self):
-        client_id = self.request.query_params.get("client_id")
-        return CashbackTransaction.objects.filter(client_id=client_id).order_by('-created_at')
+        user_id = self.request.query_params.get("user_id")
+        return CashbackTransaction.objects.filter(user=user_id).order_by('-created_at')
 
 
 class CashbackTransactionViewSet(viewsets.ViewSet):
@@ -49,9 +53,9 @@ class CashbackTransactionViewSet(viewsets.ViewSet):
         method='post',
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
-            required=['client_id', 'cashback_amount'],
+            required=['user_id', 'cashback_amount'],
             properties={
-                'client_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                'user_id': openapi.Schema(type=openapi.TYPE_INTEGER),
                 'cashback_amount': openapi.Schema(type=openapi.TYPE_NUMBER, format='decimal'),
                 'amount': openapi.Schema(type=openapi.TYPE_NUMBER, format='decimal'),
                 'weight': openapi.Schema(type=openapi.TYPE_NUMBER, format='decimal'),
@@ -63,14 +67,20 @@ class CashbackTransactionViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['post'], url_path='earn')
     def earn_cashback(self, request):
         data = request.data
-        client_id = data.get("client_id")
+        user_id = data.get("user_id")
+
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({"error": "User not defined"})
+        
         cashback_amount = Decimal(data.get("cashback_amount", 0))
         amount = data.get("amount")
         weight = data.get("weight")
         description = data.get("description", "")
 
         try:
-            balance = CashbackBalance.objects.get(client_id=client_id)
+            balance = CashbackBalance.objects.get(user=user)
         except CashbackBalance.DoesNotExist:
             return Response({"detail": "Баланс не найден"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -82,7 +92,7 @@ class CashbackTransactionViewSet(viewsets.ViewSet):
         balance.save()
 
         transaction = CashbackTransaction.objects.create(
-            client_id=client_id,
+            user=user,
             transaction_type='EARNED',
             cashback_amount=cashback_amount,
             amount=amount,
@@ -97,9 +107,9 @@ class CashbackTransactionViewSet(viewsets.ViewSet):
         method='post',
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
-            required=['client_id', 'cashback_amount'],
+            required=['user_id', 'cashback_amount'],
             properties={
-                'client_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                'user_id': openapi.Schema(type=openapi.TYPE_INTEGER),
                 'cashback_amount': openapi.Schema(type=openapi.TYPE_NUMBER, format='decimal'),
                 'description': openapi.Schema(type=openapi.TYPE_STRING),
             },
@@ -109,12 +119,19 @@ class CashbackTransactionViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['post'], url_path='use')
     def use_cashback(self, request):
         data = request.data
-        client_id = data.get("client_id")
+        user_id = data.get("user_id")
+
+
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({"error": "User not defined"})
+
         cashback_amount = Decimal(data.get("cashback_amount", 0))
         description = data.get("description", "")
 
         try:
-            balance = CashbackBalance.objects.get(client_id=client_id)
+            balance = CashbackBalance.objects.get(user=user)
         except CashbackBalance.DoesNotExist:
             return Response({"detail": "Баланс не найден"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -127,7 +144,7 @@ class CashbackTransactionViewSet(viewsets.ViewSet):
         balance.save()
 
         transaction = CashbackTransaction.objects.create(
-            client_id=client_id,
+            user=user,
             transaction_type='USED',
             cashback_amount=cashback_amount,
             balance_before=balance_before,

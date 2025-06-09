@@ -1,16 +1,11 @@
 from django.urls import path
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
-
-from apps.users.views import GetMeAPIView, UserCreateAPIView
+from apps.users.views import GetMeAPIView, UserCreateAPIView, UserListAPIView, UserDestroyAPIView
 
 
 
 urlpatterns = [
-    path("get_me/", GetMeAPIView.as_view(), name="get_me"),
+    path("", UserListAPIView.as_view(), name="users_list"),
+    path("<int:pk>/", UserDestroyAPIView.as_view(), name="users_delete"),
+    path("<str:telegram_id>/", GetMeAPIView.as_view(), name="get_me"),
     path("create/", UserCreateAPIView.as_view(), name="create_user"),
-    path('login/', TokenObtainPairView.as_view(), name='token_create_login'),
-    path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

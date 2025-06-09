@@ -1,12 +1,14 @@
 from django.db import models
 
-from apps.clients.models import Client
+from django.contrib.auth import get_user_model
 
+
+User = get_user_model()
 
 class CashbackBalance(models.Model):
-    client = models.OneToOneField(
-        Client, on_delete=models.CASCADE,
-        related_name="cashback_balance",
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE,
+        related_name="balance",
     )
     total_earned = models.DecimalField(
         max_digits=10, decimal_places=2,
@@ -39,9 +41,9 @@ class CashbackTransaction(models.Model):
         ('USED', 'Used'),
     ]
 
-    client = models.ForeignKey(
-        Client, on_delete=models.CASCADE,
-        related_name="cashback_transactions",
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        related_name="transactions",
     )
     transaction_type = models.CharField(
         max_length=6,

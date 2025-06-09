@@ -40,9 +40,6 @@ class Command(BaseCommand):
 
             # Создаём объект
             client_obj = Client.objects.create(**client_data)
-            CashbackBalance.objects.create(
-                client=client_obj
-            )
             created_count += 1
 
         self.stdout.write(self.style.SUCCESS(f"Создано {created_count} клиентов в базе данных"))

@@ -3,3 +3,8 @@
 
 ### DEVELOPERS:
 - kubatbaew
+
+исправить transaction методы
+при создания пользователя принимать id telegram client code
+получение по id telegram
+уделение аккаунта

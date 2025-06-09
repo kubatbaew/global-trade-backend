@@ -9,17 +9,8 @@ class User(AbstractUser):
     telegram_id = models.CharField(
         max_length=120,
     )
-    # client_id = models.OneToOneField(
-    #     Client, on_delete=models.SET_NULL,
-    #     blank=True, null=True
-    # )
-    client_code = models.CharField(
-        max_length=8,
-    )
-    first_name = models.CharField(max_length=60)
-    last_name = models.CharField(max_length=60)
-    phone_number = models.CharField(
-        max_length=12,
+    client = models.OneToOneField(
+        Client, on_delete=models.SET_NULL,
         blank=True, null=True
     )
     is_admin = models.BooleanField(
@@ -32,3 +23,6 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "Users"
+
+# new users
+# - id, telegram_id, client, balance - total
