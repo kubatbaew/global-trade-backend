@@ -11,4 +11,4 @@ accesslog = "gunicorn-access.log"  # Лог запросов
 loglevel = "info"             # Уровень логирования: debug/info/warning/error/critical
 reload = False                # Перезагрузка при изменении кода (в dev-среде можно True)
 
-# command: gunicorn core.wsgi:application --config gunicorn.conf.py
+# command: gunicorn core.wsgi:application --config gunicorn.conf.py --daemon
