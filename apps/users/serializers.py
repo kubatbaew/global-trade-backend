@@ -1,3 +1,6 @@
+import secrets
+import string
+
 from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
@@ -65,9 +68,16 @@ class UserCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         client_code = validated_data.pop("client_code")
         client = Client.objects.get(client_code=client_code)
-        user = User.objects.create(client=client, **validated_data)
+        user = User.objects.create(client=client, **validated_data, username=generate_unique_username())
         CashbackBalance.objects.create(user=user)
         return user
+
+
+def generate_unique_username():
+    while True:
+        username = 'user_' + ''.join(secrets.choice(string.ascii_lowercase + string.digits) for _ in range(8))
+        if not User.objects.filter(username=username).exists():
+            return username
 
 
 class UserTransferSerializer(serializers.ModelSerializer):
