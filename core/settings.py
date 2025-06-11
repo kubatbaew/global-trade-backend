@@ -27,6 +27,7 @@ LOCAL_APPS = [
     "apps.users",
     "apps.clients",
     "apps.cashbacks",
+    "apps.currencies",
 ]
 
 THRID_APPS = [
