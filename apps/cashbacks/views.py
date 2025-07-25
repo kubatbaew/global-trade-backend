@@ -1,4 +1,4 @@
-from rest_framework import mixins, viewsets, status
+from rest_framework import mixins, viewsets, status, generics
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from decimal import Decimal
@@ -152,3 +152,11 @@ class CashbackTransactionViewSet(viewsets.ViewSet):
             description=description
         )
         return Response(CashbackTransactionSerializer(transaction).data, status=status.HTTP_201_CREATED)
+    
+
+class CashBackTransactionAllListAPIView(
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
+    queryset = CashbackTransaction.objects.all().order_by('-created_at')
+    serializer_class = CashbackTransactionSerializer
