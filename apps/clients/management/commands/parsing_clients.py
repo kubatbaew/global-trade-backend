@@ -1,6 +1,5 @@
 import json
 from django.core.management.base import BaseCommand
-
 from apps.clients.models import Client
 
 class Command(BaseCommand):
@@ -25,8 +24,20 @@ class Command(BaseCommand):
         skipped_count = 0
 
         for client in clients:
+            client_code = client.get('client_code')
+
+            # Если client_code пуст — пропускаем
+            if not client_code:
+                skipped_count += 1
+                continue
+
+            # Проверка по уникальному коду
+            if Client.objects.filter(client_code=client_code).exists():
+                skipped_count += 1
+                continue
+
             client_data = {
-                'client_code': client.get('client_code'),
+                'client_code': client_code,
                 'first_name': client.get('name'),
                 'last_name': client.get('surname'),
                 'phone_number': client.get('phone_number'),
@@ -36,17 +47,11 @@ class Command(BaseCommand):
                 'address': client.get('address') or None
             }
 
-            # Проверка — есть ли клиент с точно такими же данными
-            if Client.objects.filter(**client_data).exists():
-                skipped_count += 1
-                continue
-
-            # Создаём нового
             Client.objects.create(**client_data)
             created_count += 1
 
         self.stdout.write(
             self.style.SUCCESS(
-                f"Создано {created_count} клиентов, пропущено {skipped_count} (уже существовали)"
+                f"Создано {created_count} клиентов, пропущено {skipped_count}"
             )
         )
