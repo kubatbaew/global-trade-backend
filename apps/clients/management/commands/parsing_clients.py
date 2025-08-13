@@ -2,7 +2,6 @@ import json
 from django.core.management.base import BaseCommand
 
 from apps.clients.models import Client
-from apps.cashbacks.models import CashbackBalance
 
 class Command(BaseCommand):
     help = 'Импорт клиентов из datac.json в базу данных'
@@ -23,6 +22,8 @@ class Command(BaseCommand):
             return
 
         created_count = 0
+        skipped_count = 0
+
         for client in clients:
             client_data = {
                 'client_code': client.get('client_code'),
@@ -31,15 +32,21 @@ class Command(BaseCommand):
                 'phone_number': client.get('phone_number'),
                 'whatsapp_number': client.get('phone_number_whatsapp'),
                 'city': client.get('city'),
-                'china_warehouse_address': client.get('guanjou_address')
+                'china_warehouse_address': client.get('guanjou_address'),
+                'address': client.get('address') or None
             }
 
-            # Если есть адрес — добавляем
-            if 'address' in client and client['address']:
-                client_data['address'] = client['address']
+            # Проверка — есть ли клиент с точно такими же данными
+            if Client.objects.filter(**client_data).exists():
+                skipped_count += 1
+                continue
 
-            # Создаём объект
-            client_obj = Client.objects.create(**client_data)
+            # Создаём нового
+            Client.objects.create(**client_data)
             created_count += 1
 
-        self.stdout.write(self.style.SUCCESS(f"Создано {created_count} клиентов в базе данных"))
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Создано {created_count} клиентов, пропущено {skipped_count} (уже существовали)"
+            )
+        )
